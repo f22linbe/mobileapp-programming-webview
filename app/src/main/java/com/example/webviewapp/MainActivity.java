@@ -1,37 +1,40 @@
 package com.example.webviewapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.widget.EditText;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+//import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
+    WebView myWebView;
 
-    public void showExternalWebPage(){
-        // TODO: Add your code for showing external web page here
-    }
 
-    public void showInternalWebPage(){
-        // TODO: Add your code for showing internal web page here
-    }
-
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Find view in layout
+        myWebView = findViewById(R.id.my_webview);
+        // Enable JS
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        // Attach a webViewClient
+        myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
+        // Load Page
+        myWebView.loadUrl("https://his.se");
+
+
+
 
         /*
-        * Rename your App. Tip: Values->Strings
-        * Enable Internet access for your App. Tip: Manifest
-        * Create a WebView element in the layout file main_activity.xml
-        * Give the WebView element ID "my_webview"
         -- Commit and push to your github fork
         * Create a private member variable called "myWebView" of type WebView
         * Locate the WebView element created in step 1 using the ID created in step 2
@@ -51,33 +54,43 @@ public class MainActivity extends AppCompatActivity {
            showing your App. One (1) screenshot showing your internal web page and
            one (1) screenshot showing your external web page.
         */
-    }
+        }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_external_web) {
-            Log.d("==>","Will display external web page");
+        @Override
+        public boolean onCreateOptionsMenu (Menu menu){
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_main, menu);
             return true;
         }
 
-        if (id == R.id.action_internal_web) {
-            Log.d("==>","Will display internal web page");
-            return true;
+        @Override
+        public boolean onOptionsItemSelected (MenuItem item){
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
+
+            //noinspection SimplifiableIfStatement
+            if (id == R.id.action_external_web) {
+                Log.d("==>", "Will display external web page");
+                showExternalWebPage();
+                return true;
+            }
+
+            if (id == R.id.action_internal_web) {
+                Log.d("==>", "Will display internal web page");
+                showInternalWebPage();
+                return true;
+            }
+
+            return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+    public void showExternalWebPage(){
+        myWebView.loadUrl("https://his.se");
+    }
+
+    public void showInternalWebPage(){
+        myWebView.loadUrl("file:///android_asset/index.html");
     }
 }
