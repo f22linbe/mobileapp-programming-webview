@@ -1,42 +1,93 @@
 
-# Rapport
+# Rapport Assignment 2: WebView
 
-**Skriv din rapport här!**
-
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
+** WebView rapport **
+Först tillät jag Internet i "uses-permission" taggen därefter ändrade jag 
+namnet på appen till "Webb-app", ersatte "TextView" i activity_main med "WebView"
+och gav den ett id "my_webview". Sedan skapar man en klass "MainActivity" som ärver funktionalitet
+från klassen "AppCompatActivity" (se kodsnutt 1 nedan). I klassen finns skapas en två funktioner som
+innehåller en intern url och en extern url i den andra som sedan sätts in i två if-satsar med
+villkor som letar efter matchning av id från en dropdown meny så när användaren väljer ett element
+i menyn så körs en av funktionerna (se kodsnutt 1 & 2 nedan).
 
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+public class MainActivity extends AppCompatActivity {
+    WebView myWebView;
+
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // Find view in layout
+        myWebView = findViewById(R.id.my_webview);
+        // Enable JS
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        // Attach a webViewClient
+        myWebView.setWebViewClient(new WebViewClient());
+        
+        }
+
+        @Override
+        public boolean onCreateOptionsMenu (Menu menu){
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onOptionsItemSelected (MenuItem item){
+            int id = item.getItemId();
+
+            if (id == R.id.action_external_web) {
+                Log.d("==>", "Will display external web page");
+                showExternalWebPage();
+                return true;
+            }
+
+            if (id == R.id.action_internal_web) {
+                Log.d("==>", "Will display internal web page");
+                showInternalWebPage();
+                return true;
+            }
+
+            return super.onOptionsItemSelected(item);
+        }
+
+    public void showExternalWebPage(){
+        myWebView.loadUrl("https://his.se");
+    }
+
+    public void showInternalWebPage(){
+        myWebView.loadUrl("file:///android_asset/index.html");
     }
 }
 ```
+kodsnutt 1
+```
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_dropdown"
+        android:title="@string/dropdown_menu"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_external_web"
+                android:title="@string/action_external_web"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/action_internal_web"
+                android:title="@string/action_internal_web"
+                app:showAsAction="ifRoom"/>
+        </menu>
+    </item>
+</menu>
+```
+kodsnutt 2
 
-Bilder läggs i samma mapp som markdown-filen.
+![](Screenshot_external_web_page.png)
+![](Screenshot_internal_web_page.png)
 
-![](android.png)
-
-Läs gärna:
-
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+f22linbe

@@ -27,33 +27,8 @@ public class MainActivity extends AppCompatActivity {
         // Enable JS
         myWebView.getSettings().setJavaScriptEnabled(true);
         // Attach a webViewClient
-        myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
-        // Load Page
+        myWebView.setWebViewClient(new WebViewClient());
 
-
-
-
-
-        /*
-        -- Commit and push to your github fork
-        * Create a private member variable called "myWebView" of type WebView
-        * Locate the WebView element created in step 1 using the ID created in step 2
-        * Create a new WebViewClient to attach to our WebView. This allows us to
-          browse the web inside our app.
-        -- Commit and push to your github fork
-        * Enable Javascript execution in your WebViewClient
-        * Enter the url to load in our WebView
-        -- Commit and push to your github fork
-        * Move the code that loads a URL into your WebView into the two methods
-          "showExternalWebPage()" and "showInternalWebPage()".
-        * Call the "showExternalWebPage()" / "showInternalWebPage()" methods
-          when you select menu options "External Web Page" or "Internal Web Page"
-          respectively
-        -- Commit and push to your github fork
-        * Take two screenshots using the "Take a screenshot" tool in the AVD
-           showing your App. One (1) screenshot showing your internal web page and
-           one (1) screenshot showing your external web page.
-        */
         }
 
         @Override
