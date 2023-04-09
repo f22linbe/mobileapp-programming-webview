@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         // Attach a webViewClient
         myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
         // Load Page
-        myWebView.loadUrl("https://his.se");
+
 
 
 

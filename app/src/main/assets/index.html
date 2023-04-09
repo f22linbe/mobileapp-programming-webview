@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIB</title>
+    <script src="https://raw.githack.com/HGustavs/Shaker.js/master/shaker.js"></script>
+    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+
+    <script>
+        function showPage(p) {
+            // Step 1 - Hide all pages
+            pageArr = document.getElementsByClassName("page");
+            for (let i = 0; i < pageArr.length; i++) {
+                let page = pageArr[i];
+                page.style.display = "none";
+            }
+            // Step 2 - Show the selected page
+            document.getElementById("page" + p).style.display = "block";
+
+            // Step 3 - Make all navbar buttons inactive
+            let btnArr = document.getElementsByClassName("navbar__btn");
+            for (let i = 0; i < btnArr.length; i++) {
+                let btn = btnArr[i];
+                btn.classList.remove("navbar__btn--active");
+            }
+
+            // Step 4 - Make page all navbar buttons with class nav+p active
+            btnArr = document.getElementsByClassName("nav" + p);
+            for (let i = 0; i < btnArr.length; i++) {
+                let btn = btnArr[i];
+                btn.classList.add("navbar__btn--active");
+            }
+        }
+        /* -----  ----- */
+
+        // Init function. Here we can put code that is needed to initialize our prototype.
+        function initPrototype() {
+            // For example, when using sound or sensors this becomes important.
+            console.log("==> Prototype init started.");
+
+            // Show the landingpage/startpage
+            showPage(2);
+            initMidnight();
+        }
+    </script>
+
+
+    <style>
+        /* CSS */
+        /* Prototype setting */
+        .prototype-start-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(50, 50, 50, 0.5);
+            z-index: 1000;
+        }
+
+        /* Variables */
+        :root {
+            --bg--color-primary: #0b0c10;
+            --bg--color-secondary: #1f2833;
+            --fg--color: #c5c6c7;
+            --btn--color-primary: #66fcf1;
+            --btn--color-secondary: #45a29e;
+            --alice-blue: #F0F8FF;
+        }
+
+        /* LAYOUT */
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            scroll-behavior: smooth;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color: var(--alice-blue);
+        }
+
+        body {
+            background-color: var(--bg--color-primary);
+        }
+
+        .container {
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* NAV */
+        .navbar {
+            background-color: var(--bg--color-secondary);
+            padding: 16px 32px;
+        }
+
+        .navbar-container {
+            margin: 0 auto;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu {
+            align-items: center;
+            display: flex;
+            justify-content: space-evenly;
+            gap: 2em;
+            flex-wrap: wrap;
+        }
+
+        /* HAMBURGER ELEMENT */
+        .hamburger {
+            display: block;
+            position: relative;
+            z-index: 1;
+
+            user-select: none;
+
+            appearance: none;
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 33px;
+            height: 4px;
+            margin-bottom: 5px;
+            position: relative;
+            background-color: var(--fg--color);
+            border-radius: 6px;
+            z-index: 1;
+
+            transform-orgin: 0 0;
+            transition: 0.4s;
+        }
+
+        .hamburger:hover span:nth-child(2),
+        .hamburger:hover span:last-child {
+            transform: translatex(-8px);
+        }
+
+        .hamburger:hover span {
+            background-color: var(--btn--color-primary);
+        }
+
+        .hamburger.burger-active span:nth-child(1) {
+            transform: translate(0px, 10px) rotate(45deg);
+        }
+
+        .hamburger.burger-active span:nth-child(2) {
+            opacity: 0;
+            /* transform: translateX(-5px); */
+        }
+
+        .hamburger.burger-active span:nth-child(3) {
+            transform: translate(-1px, -8px) rotate(-45deg);
+        }
+
+        /* COMPONENTS */
+
+        .btn--outline {
+            border: 2px solid var(--btn--color-primary);
+            background-color: transparent;
+            border-radius: .75rem;
+            box-sizing: border-box;
+            color: var(--fg--color);
+            font-weight: 400;
+            line-height: 1rem;
+            padding: 0.5rem 1rem;
+            text-align: center;
+
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+        }
+
+        .contact:hover {
+            border: 2px solid var(--btn--color-secondary);
+        }
+
+        /* .contact:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        } */
+
+        .contact:focus-visible {
+            box-shadow: none;
+        }
+
+        /* TYPES */
+        .home-logo {
+            color: aliceblue;
+        }
+
+        /* ------------------------------------ */
+        /* --------- PROJECT MIDNIGHT --------- */
+        /* ------------------------------------ */
+        /* Layout */
+
+
+        .midnight-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background-color: var(--bg--color-secondary);
+            border-radius: 1rem;
+            padding: 10px;
+            width: 1000px;
+            /* box-shadow: 0px 0px 10px 0px rgba(102, 252, 241, 0.7); */
+            position: relative;
+            animation: bounce-in 1s ease-in, colorFade 5s infinite alternate;
+            transform-origin: center top;
+        }
+
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(0.9);
+            }
+
+            60% {
+                transform: scale(1.3);
+            }
+
+            80% {
+                transform: scale(0.8);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes colorFade {
+            0% {
+                box-shadow: 0px 0px 20px 4px rgba(102, 252, 241, 0.7);
+            }
+
+            25% {
+                box-shadow: 0px 0px 15px 3px rgba(115, 123, 242, 0.5);
+            }
+
+            50% {
+                box-shadow: 0px 0px 20px 2px rgba(47, 71, 136, 0.70);
+            }
+
+            75% {
+                box-shadow: 0px 0px 15px 3px rgba(111, 36, 112, 0.6)
+            }
+
+            100% {
+                box-shadow: 0px 0px 20px 4px rgba(132, 7, 134, 0.705);
+            }
+        }
+
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* overflow: hidden; */
+            gap: 5px;
+            max-width: 100%;
+            min-height: 50px;
+            margin-bottom: 0.75rem;
+        }
+
+        /* BOXES */
+        .player-box {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 0.75rem;
+        }
+
+        .score-box {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 0.75rem;
+        }
+
+        .turn-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .play-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 0.75rem;
+        }
+
+        .other-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* TYPOGRAPHY */
+        .game-container h1 {
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+
+        /* Media Queries */
+        @media only screen and (max-height:667px) and (orientation: portrait) {
+
+            .dice-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                justify-items: center;
+            }
+
+            .dice {
+                width: 75px;
+                height: 75px;
+            }
+
+        }
+
+        @media only screen and (min-height:668px) and (orientation: portrait) {
+            .dice-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                justify-items: center;
+
+            }
+
+            .dice {
+                width: 100px;
+                height: 100px;
+            }
+
+        }
+
+        @media only screen and (max-width: 900px) and (orientation: landscape) {
+            .dice-container {
+                flex-direction: row;
+            }
+
+            .dice {
+                width: 75px;
+                height: 75px;
+            }
+
+        }
+
+
+        @media only screen and (min-width: 901px) and (orientation: landscape) {
+            .dice-container {
+                flex-direction: row;
+            }
+
+            .dice {
+                width: 100px;
+                height: 100px;
+            }
+
+
+        }
+
+        @media only screen and (min-height: 800px) and (orientation: landscape) {}
+
+        .dice:hover {
+            box-shadow: 0 0 5px 2px #ffcc00;
+            border-radius: 0.4rem;
+            cursor: pointer;
+        }
+
+        .is-hidden {
+            display: none;
+        }
+
+        .is-locked {
+            box-shadow: 0 0 5px 2px #ffcc00;
+            border-radius: 0.4rem;
+        }
+
+        .is-active {
+            border-radius: 5px;
+            border: 2px solid var(--btn--color-secondary);
+            padding: 5px;
+        }
+
+        /* TOOLTIP RULES */
+        .btn--thin-outline {
+            border: 1px solid var(--btn--color-primary);
+            background-color: transparent;
+            border-radius: .75rem;
+            box-sizing: border-box;
+            color: var(--fg--color);
+            display: inline-block;
+            font-weight: 400;
+            margin-top: 12px;
+            line-height: 1rem;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+        }
+
+
+        .tooltip {
+            /* hide and position tooltip */
+            position: absolute;
+            max-width: 375px;
+            width: 80%;
+            background-color: var(--alice-blue);
+            border-radius: 5px;
+            opacity: 0;
+            overflow: hidden;
+            padding: 5px;
+            pointer-events: none;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .tooltip span {
+            background-color: var(--alice-blue);
+        }
+
+        .tooltip a {
+            pointer-events: auto;
+            color: var(--bg--color-secondary)
+        }
+
+        .tooltip h2 {
+            color: var(--bg--color-primary);
+        }
+
+        .tooltip p {
+            color: var(--bg--color-primary)
+        }
+
+        .rules-license {
+            padding-top: 1rem;
+            font-size: 10px;
+            color: #c5c6c7;
+        }
+
+        /* svg */
+
+        .svg-image {
+            /* display: block; */
+            width: 100%;
+            max-width: 16px;
+            position: absolute;
+            left: 0.75rem;
+            top: 0.75rem;
+            cursor: pointer;
+            color: #66fcf1;
+        }
+    </style>
+</head>
+
+<body onload="showPage(0); initHammer();">
+<div id="page0" class="page">
+    <div class="prototype-start-page">
+        <button class="navbar__btn navbar__btn--primary" type="button" onclick="initPrototype();">Start
+            prototype</button>
+    </div>
+</div>
+<div id="page1" class="page">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-home">
+                <h1 class="home-logo">LIB</h1>
+            </div>
+            <div class="menu">
+                <button type="button" class="btn btn--outline contact">Say Hello</button>
+                <div class="hamburger-menu">
+                    <button class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+
+        <section class="hero">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="hero-text title">Project Manager & Web dev student</h1>
+                    <h2 class="hero-text description">A willingness to learn and grow is the foundation of any
+                        successful
+                        career.</h2>
+                    <img src="" alt="" class="hero-image">
+                </div>
+            </div>
+        </section>
+        <section class="about">
+            <div class="skills-body">
+                <div class="container">
+                    <div class="skills-text">
+                        <h1 class="skills-text title"></h1>
+                    </div>
+                    <div class="3-columns">
+                        <div class="div"></div>
+                        <div class="div"></div>
+                        <div class="div"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-body">
+                <div class="container">
+                    <h1 class="about-text title">About me</h1>
+                    <h2 class="about-text description">Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                        Illo,
+                        perspiciatis porro tenetur harum officiis quaerat omnis, sunt, sapiente numquam quisquam
+                        repellendus? Earum, nulla consequatur. Cum, vitae. At dolores dolore reiciendis hic nisi
+                        repellat,
+                        recusandae soluta similique fugit possimus laudantium labore rerum vitae nostrum nesciunt
+                        neque.
+                        Porro necessitatibus rerum vero quo.</h2>
+                </div>
+            </div>
+        </section>
+        <section class="projects">
+            <div class="projects-body">
+                <div class="container">
+                    <div id="project-midnight" class="project" onclick="showPage(2); initMidnight(); ">MIDNIGHT DICE
+                        GAME</div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </section>
+        <section class="service"></section>
+        <footer class="foot"></footer>
+    </div>
+</div>
+<div id="page2" class="page">
+    <div class="midnight-container">
+        <div class="game-container">
+            <img src="return_arrow.svg" alt="" class="svg-image" onclick="showPage(1);">
+            <h1 id="game-title"></h1>
+            <section class="game-elements">
+                <div class="player-box">
+                    <h2 class="player player--0 is-active" id="name--0">Player 1</h2>
+                    <h2 class="player player--1" id="name--1">Player 2</h2>
+                </div>
+                <div class="turn-box">
+                    <p class="turns" id="turn--0"></p>
+                    <p class="turns" id="turn--1"></p>
+                </div>
+                <div class="score-box">
+                    <p class="score" id="score--0">0</p>
+                    <p class="score" id="score--1">0</p>
+                </div>
+                <div class="play-box">
+                    <button class="btn btn--outline btn-roll">🎲 Roll</button>
+                    <button class="btn btn--outline btn-collect">💰 Hold </button>
+                </div>
+
+            </section>
+            <div class="dice-container">
+                <img src="Dice-1.png" class="dice dice-one">
+                <img src="Dice-2.png" class="dice dice-two">
+                <img src="Dice-3.png" class="dice dice-three">
+                <img src="Dice-4.png" class="dice dice-four">
+                <img src="Dice-5.png" class="dice dice-five">
+                <img src="Dice-6.png" class="dice dice-six">
+            </div>
+            <div class="other-container">
+
+                <span id="pressElement" class="tooltipAnchor btn--thin-outline">📄 Rules</span><span id="tooltip"
+                                                                                                     class="tooltip">
+                        <h2>RULES:</h2>
+                        <p>One player rolls at a time. All six dice are rolled; the player must "keep" at least
+                            one. Any that the player doesn't keep are rerolled. This procedure is then repeated
+                            until there are no more dice to roll. Once kept, dice cannot be rerolled. Players
+                            must have kept a 1 and a 4, or they do not score. If they have a 1 and 4, the other
+                            dice are totaled to give the player's score. The maximum score is 24 (four 6s.) The
+                            procedure is repeated for the remaining players. The player with the highest
+                            four-dice total wins.[1] If two or more players tie for the highest total, any money
+                            bet is added to the next game.</p>
+                    </span>
+                <button class="btn btn--thin-outline btn-newGame">🎮 New Game</button>
+            </div>
+            <p class="rules-license">The game rules are based on <a
+                    href="https://en.wikipedia.org/wiki/Midnight_(game)">Midnight
+                (game)</a>
+                licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA
+                    3.0.</a> Original article includes reference <a
+                        href="https://bruteforcex.blogspot.com/2008/03/1-4-24-dice-game.html">1-4-24
+                    Dice Game</a></p>
+        </div>
+    </div>
+</div>
+<script>
+
+        /* ------------------------------------ */
+        /* --------- PROJECT MIDNIGHT --------- */
+        /* ------------------------------------ */
+
+        // Player Elements
+        const playerOne = document.querySelector('.player--0');
+        const playerTwo = document.querySelector('.player--1');
+
+        // Score Element
+        const scoreP1 = document.getElementById('.score--0');
+        const scoreP2 = document.getElementById('.score--1');
+
+        // Dice Elements
+        const diceEl = document.querySelectorAll('.dice');
+
+        // Button Elements
+        const btnRoll = document.querySelector('.btn-roll');
+        const btnCollect = document.querySelector('.btn-collect');
+        const btnNew = document.querySelector('.btn-newGame');
+        document.getElementById(`game-title`).textContent = "MIDNIGHT"
+        // New game conditions
+        const hideDice = function () {
+            diceEl.forEach(dice => dice.classList.add('is-hidden'));
+        };
+        hideDice();
+
+        // Roll dice
+        let scores, currentPlayer, playing, numRolls, numLocked;
+        function initMidnight() {
+
+            // Sarting values
+            scores = [0, 0];
+            currentPlayer = 0;
+            playing = true;
+            numRolls = 6;
+            numLocked = 0;
+
+            playerOne.classList.add('is-active');
+            playerTwo.classList.remove('is-active');
+
+
+        }
+        shaker.on("shake", function () {
+            shuffleDice();
+            winner();
+        });
+        // TODO ADD NEW GAME BUTTON
+        btnRoll.addEventListener('click', function () {
+            shuffleDice();
+            winner();
+        });
+
+        btnCollect.addEventListener('click', function () {
+            if (calcScore()) {
+                numRolls = 1;
+                diceEl.forEach(dice => dice.classList.add('is-locked'));
+                shuffleDice();
+                winner();
+
+            }
+        });
+        btnNew.addEventListener('click', function () {
+
+            unlockDice();
+            scores = [0, 0];
+            currentPlayer = 0;
+            playing = true;
+            numRolls = 6;
+            numLocked = 0;
+            playerOne.classList.add('is-active');
+            playerTwo.classList.remove('is-active');
+            document.getElementById(`game-title`).textContent = "MIDNIGHT"
+            document.getElementById(`turn--${currentPlayer}`).textContent = "NEW GAME";
+            document.getElementById(`score--0`).textContent = 0;
+            document.getElementById(`score--1`).textContent = 0;
+            setTimeout(() => {
+                document.getElementById(`turn--0`).textContent = "";
+                document.getElementById(`turn--1`).textContent = "";
+            }, 3000);
+
+        });
+
+        const diceImages = [
+            "Dice-1.png",
+            "Dice-2.png",
+            "Dice-3.png",
+            "Dice-4.png",
+            "Dice-5.png",
+            "Dice-6.png"
+        ];
+
+        // Shuffle dice 1-6
+        function shuffleDice() {
+            let lockedDice = Array.from(diceEl).filter(el => el.classList.contains('is-locked'));
+            let unlockedDice = Array.from(diceEl).filter(el => !el.classList.contains('is-locked'));
+            // Shuffle the images for each unlocked dice element
+            let diceLocked = lockedDice.length;
+            if (playing && numRolls > 0 && diceLocked >= numLocked) {
+                unlockedDice.forEach(diceEl => {
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(() => {
+                            diceEl.src = diceImages[Math.floor(Math.random() * diceImages.length)];
+                        }, i * 100);
+                    }
+                });
+                numRolls--;
+                numLocked++;
+            }
+            if (numRolls < 6 && diceLocked === 6) {
+                numRolls = 0;
+            }
+            console.log(numRolls);
+            diceEl.forEach(dice => dice.classList.remove('is-hidden'));
+            document.getElementById(`turn--${currentPlayer}`).textContent = `Rolls left: ${numRolls}`;
+            sumOfDice();
+            if (currentPlayer === 0 && numRolls === 0) {
+                document.getElementById(`turn--${currentPlayer}`).textContent = "";
+                switchPlayer();
+            }
+
+        }
+        // Sum of Dice
+        function sumOfDice() {
+            // Timeout ends after shuffle timeout
+            setTimeout(() => {
+                let sum = 0;
+                diceEl.forEach((diceEl) => {
+                    // Get src file name
+                    const diceSrc = diceEl.getAttribute('src');
+                    // Get number of each dice
+                    const diceNum = parseInt(diceSrc.slice(diceSrc.lastIndexOf('-') + 1, diceSrc.lastIndexOf('.')));
+                    // Total sum
+                    sum += diceNum;
+                });
+                console.log(sum);
+                // console.log(calcScore());
+                calcScore();
+                // calcScore();
+                if (calcScore()) {
+                    document.getElementById(`score--${currentPlayer}`).textContent = sum - 5;
+                    scores[currentPlayer] = sum - 5;
+                } else {
+                    document.getElementById(`score--${currentPlayer}`).textContent = 0;
+                    scores[currentPlayer] = 0;
+                }
+            }, 1100);
+        }
+        // Check if 1 & 4 exists
+        // 1-4 checker function
+        function calcScore() {
+            let leastOne = false;
+            let leastFour = false;
+            document.querySelectorAll('.dice-container img').forEach(function (dice) {
+                let imageFile = dice.getAttribute('src').split('/').pop();
+                if (imageFile.includes("1")) {
+                    leastOne = true;
+                    // console.log("there is least one");
+                }
+                if (imageFile.includes("4")) {
+                    leastFour = true;
+                    // console.log("there is least four");
+                }
+            });
+            if (leastOne && leastFour) {
+                // console.log("1 and 4 is present");
+                return true;
+            } else {
+                // console.log("1 and 4 is not present");
+                return false;
+            }
+        }
+
+        // Lock dice
+        // diceEl.forEach(function (dice) {
+        //     dice.addEventListener("click", function () {
+        //         if (numRolls !== 6) {
+        //             this.classList.add("is-locked")
+        //         }
+        //     });
+        // });
+        // var diceEls = document.getElementsByClassName("dice")
+        // Array.from(diceEls).forEach(function (die) {
+        //     die.addEventListener("click", function () {
+        //         console.log('CLICK!');
+        //     })
+        // })
+
+        // Unlock dice
+        const unlockDice = function () {
+            diceEl.forEach(function (dice) {
+                dice.classList.remove("is-locked");
+            });
+            setTimeout(() => {
+                for (let i = 0; i < diceImages.length; i++)
+                    diceEl[i].src = diceImages[i];
+            }, 1000);
+        }
+        // Switch player
+        function switchPlayer() {
+            setTimeout(() => {
+                numRolls = 6;
+                numLocked = 0;
+                currentPlayer = currentPlayer === 0 ? 1 : 0;
+                playerOne.classList.toggle('is-active');
+                playerTwo.classList.toggle('is-active');
+                unlockDice();
+                document.getElementById(`score--1`).textContent = "0";
+            }, 2000);
+        };
+
+        // Declare winner
+        function winner() {
+            setTimeout(() => {
+                if (currentPlayer === 1 && numRolls === 0) {
+                    playing = false;
+                    if (scores[0] > scores[1]) {
+                        document.getElementById(`game-title`).textContent = "Player 1 WON!"
+                    }
+                    if (scores[1] > scores[0]) {
+                        document.getElementById(`game-title`).textContent = "Player 2 WON!"
+                    }
+                    if (scores[1] == scores[0]) {
+                        document.getElementById(`game-title`).textContent = "It's a DRAW"
+                    }
+                }
+
+            }, 1200)
+
+        }
+
+        /* ------------------------------------ */
+        /* -------------- HAMMER -------------- */
+        /* ------------------------------------ */
+        function initHammer() {
+            // Get the textelement that should "listen" to touch events
+            var element = document.getElementById("pressElement");
+
+
+            var diceEls = document.getElementsByClassName("dice")
+            Array.from(diceEls).forEach(function (die) {
+
+                var dieHam = new Hammer(die)
+
+                dieHam.on("tap", function (event) {
+                    if (numRolls !== 6) {
+                        event.target.classList.add('is-locked');
+                    }
+                });
+                dieHam.on("doubletap", function (event) {
+                    event.target.classList.remove('is-locked')
+                });
+            });
+            // Init Hammer
+            var hammertime = Hammer(element);
+
+            // Show tooltip when press is active on our html element that listens to "press"
+            hammertime.on("press", function (event) {
+                element = document.getElementById("tooltip").style.opacity = "1";
+            });
+
+            // hide tooltip when releasing
+            hammertime.on("pressup", function (event) {
+                element = document.getElementById("tooltip").style.opacity = "0";
+            });
+
+        }
+
+    </script>
+
+<script>
+        const hamburger = document.querySelector('.hamburger');
+
+        hamburger.addEventListener('click', function () {
+            this.classList.toggle('burger-active');
+        })
+    </script>
+</body>
+
+</html>
